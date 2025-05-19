@@ -50,32 +50,47 @@ class NoteDetailScreen extends ConsumerWidget {
               mainAxisAlignment:
                   MainAxisAlignment.spaceBetween,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Anuluj'),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.grey.shade300,
+                      foregroundColor: Colors.black,
+                    ),
+                    child: Text('Anuluj'),
+                  ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    if (note == null) {
-                      ref
-                          .read(noteProvider.notifier)
-                          .addNote(controller.text);
-                    } else {
-                      ref
-                          .read(noteProvider.notifier)
-                          .editNote(
-                            note!.id,
-                            controller.text,
-                          );
-                    }
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    note == null
-                        ? 'Zapisz'
-                        : 'Zaktualizuj',
+                SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (note == null) {
+                        ref
+                            .read(noteProvider.notifier)
+                            .addNote(controller.text);
+                      } else {
+                        ref
+                            .read(noteProvider.notifier)
+                            .editNote(
+                              note!.id,
+                              controller.text,
+                            );
+                      }
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.blue.shade700,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text(
+                      note == null
+                          ? 'Zapisz'
+                          : 'Zaktualizuj',
+                    ),
                   ),
                 ),
               ],

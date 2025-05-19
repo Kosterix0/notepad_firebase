@@ -6,12 +6,11 @@ part 'note_state.g.dart';
 @freezed
 class NoteState with _$NoteState {
   const factory NoteState({
-    required String id, //id
-    required String content, //tresc
-    required DateTime createdAt, //data utworzenia
+    required String id,
+    required String content,
+    required DateTime createdAt,
   }) = _NoteState;
 
-  //json
   factory NoteState.fromJson(
     Map<String, dynamic> json,
   ) => _$NoteStateFromJson(json);

@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notatnik/note/pages/home_screen.dart';
-import 'package:notatnik/signInWithGoogle.dart';
+import 'package:notatnik/note/app/signInWithGoogle.dart';
 
-// A stateless widget for the Sign-In screen
 class SignInScreen extends StatelessWidget {
-  // Instance of GoogleAuthService to handle Google Sign-In
   final GoogleAuthService _authService =
       GoogleAuthService();
 
@@ -14,37 +12,80 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar with title and styling
-      appBar: AppBar(
-        title: Text("GFG Sign In"),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
-      ),
-      // Main body of the screen
+      backgroundColor: const Color(0xFFE3F2FD),
       body: Center(
-        // ElevatedButton for Google Sign-In
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.green,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 32.0,
           ),
-          // Asynchronous function triggered on button press
-          onPressed: () async {
-            // Attempt to sign in with Google
-            User? user =
-                await _authService.signInWithGoogle();
-            // If sign-in is successful, navigate to the HomeScreen
-            if (user != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => HomeScreen(user: user),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Witaj!",
+                style: TextStyle(
+                  fontSize: 36,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade900,
+                  letterSpacing: 1.5,
                 ),
-              );
-            }
-          },
-          // Text displayed on the button
-          child: Text("Sign in with Google"),
+              ),
+              SizedBox(height: 16),
+              Text(
+                "Zaloguj się przez Google, aby korzystać z notatnika.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.blueGrey.shade700,
+                ),
+              ),
+              SizedBox(height: 48),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.blue.shade900,
+                  minimumSize: Size(double.infinity, 50),
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      12,
+                    ),
+                  ),
+                  side: BorderSide(
+                    color: Colors.blue.shade900,
+                    width: 2,
+                  ),
+                ),
+                icon: Image.asset(
+                  'assets/google_logo.png',
+                  height: 28,
+                  width: 28,
+                ),
+                label: Text(
+                  "Zaloguj się z Google",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onPressed: () async {
+                  User? user =
+                      await _authService
+                          .signInWithGoogle();
+                  if (user != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) =>
+                                HomeScreen(user: user),
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

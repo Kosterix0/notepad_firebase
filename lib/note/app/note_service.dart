@@ -1,72 +1,100 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../domain/note_state.dart';
 
 class NoteNotifier
     extends StateNotifier<List<NoteState>> {
+  final FirebaseFirestore _firestore =
+      FirebaseFirestore.instance;
+  StreamSubscription<User?>? _authSubscription;
+  StreamSubscription<QuerySnapshot>? _notesSubscription;
+
   NoteNotifier() : super([]) {
-    _loadNotes();
+    _authSubscription = FirebaseAuth.instance
+        .authStateChanges()
+        .listen((user) {
+          _handleAuthChange(user);
+        });
   }
 
-  //wczytywanie notatek z local storage
-  Future<void> _loadNotes() async {
-    final prefs = await SharedPreferences.getInstance();
-    final notesJson = prefs.getString('notes');
-    if (notesJson != null) {
-      final List<dynamic> decoded = jsonDecode(
-        notesJson,
-      );
-      state =
-          decoded
-              .map((note) => NoteState.fromJson(note))
-              .toList();
+  void _handleAuthChange(User? user) {
+    // Anuluj poprzednią subskrypcję
+    _notesSubscription?.cancel();
+    state = [];
+
+    if (user != null) {
+      _notesSubscription = _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('notes')
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .listen((querySnapshot) {
+            state =
+                querySnapshot.docs.map((doc) {
+                  return NoteState(
+                    id: doc.id,
+                    content: doc['content'],
+                    createdAt:
+                        (doc['createdAt'] as Timestamp)
+                            .toDate(),
+                  );
+                }).toList();
+          });
     }
   }
 
-  //zapis notatek w local storage
-  Future<void> _saveNotes() async {
-    final prefs = await SharedPreferences.getInstance();
-    final notesJson = jsonEncode(
-      state.map((note) => note.toJson()).toList(),
-    );
-    await prefs.setString('notes', notesJson);
+  Future<void> addNote(String content) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('notes')
+        .add({
+          'content': content,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
   }
 
-  //dodawanie nowej notatki
-  void addNote(String content) {
-    final newNote = NoteState(
-      id:
-          DateTime.now().millisecondsSinceEpoch
-              .toString(),
-      content: content,
-      createdAt: DateTime.now(),
-    );
-    state = [...state, newNote];
-    _saveNotes();
+  Future<void> editNote(
+    String id,
+    String newContent,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('notes')
+        .doc(id)
+        .update({'content': newContent});
   }
 
-  //edytowanie notatki
-  void editNote(String id, String newContent) {
-    state =
-        state.map((note) {
-          if (note.id == id) {
-            return note.copyWith(content: newContent);
-          }
-          return note;
-        }).toList();
-    _saveNotes();
+  Future<void> deleteNote(String id) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('notes')
+        .doc(id)
+        .delete();
   }
 
-  //usuwanie notatki
-  void deleteNote(String id) {
-    state =
-        state.where((note) => note.id != id).toList();
-    _saveNotes();
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    _notesSubscription?.cancel();
+    super.dispose();
   }
 }
 
-//provider dla listy notatek
 final noteProvider =
     StateNotifierProvider<NoteNotifier, List<NoteState>>(
       (ref) {

@@ -15,24 +15,18 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-NoteState _$NoteStateFromJson(
-  Map<String, dynamic> json,
-) {
+NoteState _$NoteStateFromJson(Map<String, dynamic> json) {
   return _NoteState.fromJson(json);
 }
 
 /// @nodoc
 mixin _$NoteState {
-  String get id =>
-      throw _privateConstructorUsedError; // Unikalny identyfikator notatki
-  String get content =>
-      throw _privateConstructorUsedError; // Treść notatki
-  DateTime get createdAt =>
-      throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
+  String get content => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// Serializes this NoteState to a JSON map.
-  Map<String, dynamic> toJson() =>
-      throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of NoteState
   /// with the given fields replaced by the non-null parameter values.
@@ -43,23 +37,14 @@ mixin _$NoteState {
 
 /// @nodoc
 abstract class $NoteStateCopyWith<$Res> {
-  factory $NoteStateCopyWith(
-    NoteState value,
-    $Res Function(NoteState) then,
-  ) = _$NoteStateCopyWithImpl<$Res, NoteState>;
+  factory $NoteStateCopyWith(NoteState value, $Res Function(NoteState) then) =
+      _$NoteStateCopyWithImpl<$Res, NoteState>;
   @useResult
-  $Res call({
-    String id,
-    String content,
-    DateTime createdAt,
-  });
+  $Res call({String id, String content, DateTime createdAt});
 }
 
 /// @nodoc
-class _$NoteStateCopyWithImpl<
-  $Res,
-  $Val extends NoteState
->
+class _$NoteStateCopyWithImpl<$Res, $Val extends NoteState>
     implements $NoteStateCopyWith<$Res> {
   _$NoteStateCopyWithImpl(this._value, this._then);
 
@@ -109,17 +94,12 @@ abstract class _$$NoteStateImplCopyWith<$Res>
   ) = __$$NoteStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String id,
-    String content,
-    DateTime createdAt,
-  });
+  $Res call({String id, String content, DateTime createdAt});
 }
 
 /// @nodoc
 class __$$NoteStateImplCopyWithImpl<$Res>
-    extends
-        _$NoteStateCopyWithImpl<$Res, _$NoteStateImpl>
+    extends _$NoteStateCopyWithImpl<$Res, _$NoteStateImpl>
     implements _$$NoteStateImplCopyWith<$Res> {
   __$$NoteStateImplCopyWithImpl(
     _$NoteStateImpl _value,
@@ -166,16 +146,13 @@ class _$NoteStateImpl implements _NoteState {
     required this.createdAt,
   });
 
-  factory _$NoteStateImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$NoteStateImplFromJson(json);
+  factory _$NoteStateImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NoteStateImplFromJson(json);
 
   @override
   final String id;
-  // Unikalny identyfikator notatki
   @override
   final String content;
-  // Treść notatki
   @override
   final DateTime createdAt;
 
@@ -189,30 +166,23 @@ class _$NoteStateImpl implements _NoteState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NoteStateImpl &&
-            (identical(other.id, id) ||
-                other.id == id) &&
-            (identical(other.content, content) ||
-                other.content == content) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.content, content) || other.content == content) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, content, createdAt);
+  int get hashCode => Object.hash(runtimeType, id, content, createdAt);
 
   /// Create a copy of NoteState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$NoteStateImplCopyWith<_$NoteStateImpl>
-  get copyWith =>
-      __$$NoteStateImplCopyWithImpl<_$NoteStateImpl>(
-        this,
-        _$identity,
-      );
+  _$$NoteStateImplCopyWith<_$NoteStateImpl> get copyWith =>
+      __$$NoteStateImplCopyWithImpl<_$NoteStateImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -227,14 +197,13 @@ abstract class _NoteState implements NoteState {
     required final DateTime createdAt,
   }) = _$NoteStateImpl;
 
-  factory _NoteState.fromJson(
-    Map<String, dynamic> json,
-  ) = _$NoteStateImpl.fromJson;
+  factory _NoteState.fromJson(Map<String, dynamic> json) =
+      _$NoteStateImpl.fromJson;
 
   @override
-  String get id; // Unikalny identyfikator notatki
+  String get id;
   @override
-  String get content; // Treść notatki
+  String get content;
   @override
   DateTime get createdAt;
 
@@ -242,6 +211,6 @@ abstract class _NoteState implements NoteState {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$NoteStateImplCopyWith<_$NoteStateImpl>
-  get copyWith => throw _privateConstructorUsedError;
+  _$$NoteStateImplCopyWith<_$NoteStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

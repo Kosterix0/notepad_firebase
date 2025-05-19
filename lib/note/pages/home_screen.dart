@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notatnik/note/app/note_service.dart';
 import 'note_detail_screen.dart';
-import 'package:notatnik/signInWithGoogle.dart';
+import 'package:notatnik/note/app/signInWithGoogle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'signInScreen.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatelessWidget {
   final User user;
@@ -49,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                     return ListTile(
                       title: Text(note.content),
                       subtitle: Text(
-                        'Utworzono: ${note.createdAt}',
+                        'Utworzono: ${DateFormat('dd.MM.yyyy HH:mm').format(note.createdAt)}',
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -109,28 +110,35 @@ class HomeScreen extends StatelessWidget {
           right: 16,
           bottom: 16,
         ),
-        child: Row(
-          children: [
-            ElevatedButton.icon(
-              onPressed: () async {
-                await _authService.signOut();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => SignInScreen(),
+        child: Consumer(
+          builder: (context, ref, _) {
+            return Row(
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    await _authService.signOut();
+                    ref.invalidate(
+                      noteProvider,
+                    ); // Reset stanu
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SignInScreen(),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  icon: Icon(Icons.logout),
+                  label: Text('Wyloguj'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red.shade900,
+                    foregroundColor: Colors.white,
                   ),
-                  (route) => false,
-                );
-              },
-              icon: Icon(Icons.logout),
-              label: Text('Wyloguj'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red.shade900,
-                foregroundColor: Colors.white,
-              ),
-            ),
-            Spacer(),
-          ],
+                ),
+                Spacer(),
+              ],
+            );
+          },
         ),
       ),
     );
