@@ -20,7 +20,6 @@ class NoteNotifier
   }
 
   void _handleAuthChange(User? user) {
-    // Anuluj poprzednią subskrypcję
     _notesSubscription?.cancel();
     state = [];
 
